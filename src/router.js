@@ -21,46 +21,55 @@ export default new Router({
                 {
                     path:"/Index",
                     name: "Index",
-                    component: Index
+                    component: Index,
+                    meta: { title: '系统首页' }
                 },
                 {
                     path: "/IndexBanner",
                     name: "IndexBanner",
+                    meta: { title: '首页轮播图' },
                     component: () => import('./pages/IndexBanner')  // 路由的按需加载
                 },
                 {
                     path: "/NewsBanner",
                     name: "NewsBanner",
+                    meta: { title: '新闻轮播图' },
                     component: () => import('./pages/NewsBanner')
                 },
                 {
                     path: "/Product",
                     name: "Product",
+                    meta: { title: '产品管理' },
                     component: () => import('./pages/Product')
                 },
                 {
                     path: "/News",
                     name: "News",
+                    meta: { title: '新闻列表' },
                     component: () => import('./pages/News')
                 },
                 {
                     path: "/NewsCategory",
                     name: "NewsCategory",
+                    meta: { title: '新闻分类' },
                     component: () => import('./pages/NewsCategory')
                 },
                 {
                     path: "/LessonChapter",
                     name: "LessonChapter",
+                    meta: { title: '课程大章' },
                     component: () => import("./pages/LessonChapter")
                 },
                 {
                     path: "/LessonSection",
                     name: "LessonSection",
+                    meta: { title: '课程小节' },
                     component: () => import("./pages/LessonSection")
                 },
                 {
                     path:"/Order",
                     name:"Order",
+                    meta: { title: '订单列表' },
                     component: () => import("./pages/Order")
                 }
             ]
