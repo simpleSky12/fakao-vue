@@ -16,32 +16,52 @@ export default new Router({
             path:'/',
             name: "Home",
             component: Home,
-            redirect: '/login',
+            redirect: '/Index',
             children:[
                 {
-                    path:"/index",
+                    path:"/Index",
                     name: "Index",
                     component: Index
                 },
                 {
-                    path: "/banner",
-                    name: "Banner",
-                    component: () => import('./pages/Banner')  // 路由的按需加载
+                    path: "/IndexBanner",
+                    name: "IndexBanner",
+                    component: () => import('./pages/IndexBanner')  // 路由的按需加载
                 },
                 {
-                    path: "/product",
+                    path: "/NewsBanner",
+                    name: "NewsBanner",
+                    component: () => import('./pages/NewsBanner')
+                },
+                {
+                    path: "/Product",
                     name: "Product",
                     component: () => import('./pages/Product')
                 },
                 {
-                    path: "/news",
+                    path: "/News",
                     name: "News",
                     component: () => import('./pages/News')
                 },
                 {
-                    path: "/newsCategory",
+                    path: "/NewsCategory",
                     name: "NewsCategory",
                     component: () => import('./pages/NewsCategory')
+                },
+                {
+                    path: "/LessonChapter",
+                    name: "LessonChapter",
+                    component: () => import("./pages/LessonChapter")
+                },
+                {
+                    path: "/LessonSection",
+                    name: "LessonSection",
+                    component: () => import("./pages/LessonSection")
+                },
+                {
+                    path:"/Order",
+                    name:"Order",
+                    component: () => import("./pages/Order")
                 }
             ]
         },

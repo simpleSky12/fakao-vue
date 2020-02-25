@@ -17,6 +17,7 @@
                     <el-input type="password"
                               v-model="param.password"
                               show-password
+                              @keyup.enter.native="submitForm"
                               placeholder="请输入密码">
                         <el-button slot="prepend" icon="el-icon-lock"></el-button>
                     </el-input>
@@ -73,7 +74,7 @@
 
     .login {
         position: relative;
-        @include bgImg(100vw, 100vh, "/imgs/login-bg.jpg", cover);
+        @include bgImg(100vw, 100vh, "../assets/imgs/login-bg.jpg", cover);
 
         .wrapper {
             @include abLeft(420px, auto);
@@ -90,6 +91,7 @@
 
             .content {
                 padding: 30px 30px;
+                overflow: hidden;
 
                 input {
                     height: 50px;

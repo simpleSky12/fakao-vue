@@ -19,7 +19,7 @@ Vue.config.productionTip = false;
 Vue.use(ElementUI, {size: 'small'});
 Vue.use(VueAxios, axios);
 Vue.use(VueLazyLoad, {
-    loading: './loading-svg/loading-spin.svg'
+    loading: './assets/loading-svg/loading-spin.svg'
 });
 Vue.use(VueCookie);
 
