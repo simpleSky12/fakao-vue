@@ -7,6 +7,7 @@ import VueCookie from "vue-cookie";
 
 import App from './App.vue';
 import router from './router';
+import store from './store'
 import 'element-ui/lib/theme-chalk/index.css';
 
 // 配置默认接口及超时时间，配合接口代理转发
@@ -15,7 +16,7 @@ axios.defaults.timeout = 8000;
 
 
 Vue.config.productionTip = false;
-Vue.use(ElementUI, {size: 'small', zIndex: 3000});
+Vue.use(ElementUI, {size: 'small'});
 Vue.use(VueAxios, axios);
 Vue.use(VueLazyLoad, {
     loading: './loading-svg/loading-spin.svg'
@@ -48,5 +49,6 @@ axios.interceptors.response.use(res => {
 
 new Vue({
     router,
+    store,
     render: h => h(App),
 }).$mount('#app');

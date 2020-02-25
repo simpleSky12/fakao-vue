@@ -1,8 +1,17 @@
 <template>
     <div>
-        <nav-header></nav-header>
-        <router-view></router-view>
-        <nav-slide></nav-slide>
+
+        <el-container style="height: 500px; border: 1px solid #eee">
+            <el-container>
+                <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+                    <nav-slide></nav-slide>
+                </el-aside>
+                <el-main>
+                    <nav-header></nav-header>
+                    <router-view></router-view>
+                </el-main>
+            </el-container>
+        </el-container>
     </div>
 </template>
 
@@ -12,14 +21,19 @@
 
     export default {
         name: "home",
-        components:{
+        components: {
             NavHeader,
             NavSlide
-        }
+        },
+
     }
 </script>
 
 <style lang="scss">
     @import "../assets/scss/reset";
+    @import "../assets/scss/mixin";
 
+    .el-aside {
+        color: #333;
+    }
 </style>
