@@ -1,5 +1,14 @@
 <template>
-    <div></div>
+    <div class="order">
+        <div class="crumbs">
+            <el-breadcrumb>
+                <el-breadcrumb-item>
+                    <i class="el-icon-s-order"></i>
+                    订单列表
+                </el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -8,6 +17,6 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss">
 
 </style>
