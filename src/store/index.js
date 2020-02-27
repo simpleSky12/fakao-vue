@@ -17,23 +17,4 @@ export default new Vuex.Store({
     state,
     mutations,
     actions
-})
-
-/*
-import Vuex from 'vuex';
-
-
-const store = new Vuex.Store({
-    state: {
-        nickname: ''
-    },
-    mutations: {
-        saveNickname(state,nickname) {
-            state.nickname = nickname;
-        }
-    }
 });
-
-export {
-    store
-}*/
