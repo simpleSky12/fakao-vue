@@ -54,8 +54,8 @@
                             nickname,
                             password
                         }).then(res => {
-                            this.$cookie.set('userId', res.id, {expires: 'Session'});
-                            this.$store.dispatch("saveNickname",res.nickname);  // 向vuex中的 action 派发请求
+                            this.$cookie.set('userId', res.data.id, {expires: 'Session'});
+                            this.$store.dispatch("saveNickname",res.data.nickname);  // 向vuex中的 action 派发请求
                             this.$message.success("登陆成功！");
                             this.$router.push('/index');
                         });
