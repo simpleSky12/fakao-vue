@@ -26,9 +26,12 @@ Vue.use(VueCookie);
 // 统一错误拦截
 axios.interceptors.response.use(res => {
         let data = res.data;
+        if (res.data == null) {
+            data = res;
+        }
         // status 状态值 为 0 时，代表成功
         if (data.status == 0) {
-            return data.data;
+            return data;
         } else if (data.status == 10) {
             // 状态码为10 表示未登陆，返回登陆页
             window.location.href = '/#/login';
@@ -43,6 +46,7 @@ axios.interceptors.response.use(res => {
     error => {
         // 状态码不为 200 时触发
         let res = error.response;
+        console.log(res);
         ElementUI.Message.error(res.data.message);
         return Promise.reject(res);
     });

@@ -7,7 +7,6 @@
 <script>
     export default {
         name: 'App',
-        components: {},
         mounted() {
           let userId = this.$cookie.get("userId");
           if (userId) {
@@ -18,9 +17,12 @@
             // 获取用户信息
             getUser() {
               this.axios.get('/admin/userInfo').then((res = {}) => {
-                  this.$store.dispatch("saveNickname", res.nickname);
+                  this.$store.dispatch("saveNickname", res.data.nickname);
               });
             }
+        },
+        computed:{
+
         }
     }
 </script>
@@ -30,4 +32,8 @@
     @import "./assets/scss/mixin";
     @import "./assets/scss/color-dark";
     @import "./assets/scss/base";
+
+    .v-modal{
+        z-index: 2!important;
+    }
 </style>

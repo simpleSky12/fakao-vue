@@ -87,7 +87,7 @@
                         ]
                     },
                     {
-                        icon: "el-icon-video-camera",
+                        icon: "el-icon-video-camera-solid",
                         index: "5",
                         title: "课程视频管理",
                         subs:[
