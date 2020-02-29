@@ -13,10 +13,18 @@
         </div>
         <div class="container">
             <div class="mgb20 handle-box">
-<!--                TODO 通过课程来筛选 章节列表-->
-               <!-- <el-select v-model="parentId" placeholder="请选择课程">
-
-                </el-select>-->
+                <!--                TODO 通过课程来筛选 章节列表-->
+                <el-select v-model="productId" placeholder="请选择课程" class="mr10">
+                    <el-option v-for="item in productList"
+                               :key="item.id"
+                               :value="item.id"
+                               :label="item.title">
+                    </el-option>
+                </el-select>
+                <el-button type="primary"
+                           @click="handleSearch"
+                           icon="el-icon-search">搜索
+                </el-button>
                 <el-button type="primary"
                            icon="el-icon-plus"
                            @click="addVisible = true">增加
@@ -98,12 +106,12 @@
                 multipleSelection: [], // ref 指向的双向绑定的对象
                 editVisible: false, // 控制编辑信息窗口的显示
                 addVisible: false, // 控制添加窗口的显示
-                imgVisible:false, // 控制产品简介图窗口的显示
+                imgVisible: false, // 控制产品简介图窗口的显示
                 editForm: {}, // 与编辑窗口中的 表单双向绑定
                 addForm: {}, // 与添加窗口中的表单双向绑定
-                productList:[], // 存放所有课程
+                productList: [], // 存放所有课程
                 showLoading: false,
-                productId: 1
+                productId: 1, // 课程id
             }
         },
         async created() {
@@ -116,7 +124,14 @@
                 this.productList = await this.getProductList();
                 this.axios.get(`/lesson/list/${this.productId}`)
                     .then(res => {
-                        this.tableData = this.getTableData(this.productList,res.data.lessonVoList);
+                        this.tableData = this.getTableData(this.productList, res.data.lessonVoList);
+                        this.showLoading = false;
+                    })
+                    .catch(error => {
+                        if (error.status == -1) {
+                            this.tableData = null;
+                            this.$message.error("该课程下还未设置课程章节");
+                        }
                         this.showLoading = false;
                     });
             },
@@ -126,6 +141,10 @@
                     .then(res => {
                         return res.data;
                     });
+            },
+            // 查询其他课程
+            handleSearch() {
+                this.getList();
             },
             // 将课程名称赋值到 章节的归属课程中
             getTableData(productList, chapterList) {
@@ -193,7 +212,7 @@
 </script>
 
 <style lang="scss">
-    .lesson-chapter{
+    .lesson-chapter {
         .handle-box {
             text-align: left;
 
@@ -246,25 +265,30 @@
                 object-fit: contain;
             }
         }
-        .upload-box{
-            .upladImg{
+
+        .upload-box {
+            .upladImg {
                 width: 100px;
                 object-fit: contain;
             }
-            .el-form-item__content{
+
+            .el-form-item__content {
                 display: flex;
                 height: 100px;
             }
-            .el-upload--picture-card{
+
+            .el-upload--picture-card {
                 width: 100px;
                 height: 100px;
                 line-height: 100px;
             }
-            .el-upload-list--picture-card .el-upload-list__item{
+
+            .el-upload-list--picture-card .el-upload-list__item {
                 width: 100px;
                 height: 100px;
             }
-            .el-upload-list el-upload-list--picture-card{
+
+            .el-upload-list el-upload-list--picture-card {
                 width: 100px;
                 height: 100px;
                 line-height: 100px;
