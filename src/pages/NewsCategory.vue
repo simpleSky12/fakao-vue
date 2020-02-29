@@ -37,36 +37,16 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <loading v-if="showLoading"></loading>
 
-            <!--&lt;!&ndash;编辑banner图的弹窗&ndash;&gt;
+            <!--编辑newsCategory图的弹窗-->
             <el-dialog title="编辑"
                        :visible.sync="editVisible"
                        width="35%"
                        :before-close="handleCancle">
                 <el-form ref="editForm" :model="editForm" label-width="100px" align="left">
-                    <el-form-item label="轮播图名称">
+                    <el-form-item label="新闻分类名称">
                         <el-input v-model="editForm.title"></el-input>
-                    </el-form-item>
-                    &lt;!&ndash; TODO 这里需要为 轮播图赋予超链接的指向，下拉表单中存放课程名称&ndash;&gt;
-                    <el-form-item label="链接产品">
-                        <el-select v-model="editForm.status">
-                            <el-option label="在售" value="1"></el-option>
-                            <el-option label="下架" value="2"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="轮播图片" class="upload-box">
-                        <img v-if="editForm.img" :src="editForm.img" class="upladImg">
-                        <el-upload
-                                action="/api/upload"
-                                list-type="picture-card"
-                                :on-preview="imgPreview"
-                                :on-success="imgUploadSuccess"
-                                :on-remove="handleRemove">
-                            <i class="el-icon-plus"></i>
-                        </el-upload>
-                        <el-dialog :visible.sync="imgVisible">
-                            <img width="100%" :src="editForm.img" alt="">
-                        </el-dialog>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -75,47 +55,32 @@
                 </span>
             </el-dialog>
 
-            &lt;!&ndash;新增banner图的弹窗&ndash;&gt;
+            <!--新增newsCategory图的弹窗-->
             <el-dialog title="新增"
                        :visible.sync="addVisible"
                        width="35%">
-                <el-form ref="editForm" :model="addForm" label-width="100px" align="left">
-                    <el-form-item label="轮播图名称">
+                <el-form ref="addForm" :model="addForm" label-width="100px" align="left">
+                    <el-form-item label="新闻分类名称">
                         <el-input v-model="addForm.title"></el-input>
-                    </el-form-item>
-                    &lt;!&ndash; TODO 这里需要为 轮播图赋予超链接的指向，下拉表单中存放课程名称&ndash;&gt;
-                    <el-form-item label="链接产品">
-                        <el-select v-model="editForm.status">
-                            <el-option label="在售" value="1"></el-option>
-                            <el-option label="下架" value="2"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="轮播图片" class="upload-box">
-                        <img v-if="addForm.img" :src="addForm.img" class="upladImg">
-                        <el-upload
-                                action="/api/upload"
-                                list-type="picture-card"
-                                :on-preview="imgPreview"
-                                :on-success="imgAddSuccess">
-                            <i class="el-icon-plus"></i>
-                        </el-upload>
-                        <el-dialog :visible.sync="imgVisible">
-                            <img width="100%" :src="addForm.img" alt="">
-                        </el-dialog>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="addVisible = false">取消</el-button>
                     <el-button type="primary" @click="handleAdd">确定</el-button>
                 </span>
-            </el-dialog>-->
+            </el-dialog>
         </div>
     </div>
 </template>
 
 <script>
+    import Loading from "../components/Loading";
+
     export default {
         name: "newsCategory",
+        components: {
+            Loading
+        },
         data() {
             return {
                 tableData: [], // 存放 渲染table表格的数据
@@ -126,6 +91,7 @@
                 editForm: {}, // 与编辑窗口中的 表单双向绑定
                 addForm: {}, // 与添加窗口中的表单双向绑定
                 newsList:[], // 存放所有新闻列表
+                showLoading: false
             }
         },
         created() {
@@ -134,38 +100,12 @@
         methods: {
             // 获取列表数据
             getList() {
+                this.showLoading = true;
                 this.axios.get(`/newsCategory/list`)
                     .then(res => {
                         this.tableData = res.data;
+                        this.showLoading = false;
                     });
-            },
-            handleRemove(file, fileList) {
-                console.log(file, fileList);
-            },
-            // 预览轮播图
-            imgPreview() {
-                this.imgVisible = true;
-            },
-            // 轮播图上传成功
-            imgUploadSuccess(res) {
-                this.editForm.img = this.toFilePath(res);
-            },
-            // 新增轮播图
-            imgAddSuccess(res) {
-                this.addForm.img = this.toFilePath(res);
-            },
-
-            // 弹窗内确认新增，触发
-            handleAdd() {
-                this.addVisible = false;
-                this.addForm.status = 20;
-                this.axios.post(`/banner/add`, this.addForm).then(() => {
-                    this.$message.success("轮播图新增成功");
-                    this.addForm = {};
-                    this.getList();
-                }).catch(() => {
-                    this.$message.warning("轮播图新增失败");
-                });
             },
             // 触发编辑轮播图窗口
             toEdit(row) {
@@ -175,15 +115,27 @@
             // 弹窗内确认修改，触发
             handleEdit() {
                 this.editVisible = false;
-                this.editForm.status = 20;
-                this.axios.put(`/banner/update/${this.editForm.id}`, this.editForm).then(() => {
-                    this.$message.success("轮播图信息修改成功");
+                this.axios.put(`/newsCategory/update?id=${this.editForm.id}&title=${this.editForm.title}`)
+                .then(() => {
+                    this.$message.success("信息修改成功");
                     this.getList();
                 }).catch(() => {
-                    this.$message.warning("轮播图信息修改失败");
+                    this.$message.warning("信息修改失败");
+                    this.getList();
                 });
             },
-            // 轮播图的删除操作
+            // 弹窗内确认新增，触发
+            handleAdd() {
+                this.addVisible = false;
+                this.axios.post(`/newsCategory/add?title=${this.addForm.title}`).then(() => {
+                    this.$message.success("新增成功");
+                    this.addForm = {};
+                    this.getList();
+                }).catch(() => {
+                    this.$message.warning("新增失败");
+                });
+            },
+            // 触发删除确认窗口
             toDelete(row) {
                 this.$confirm("确定要删除吗？", "提示", {
                     type: "waring"
@@ -191,13 +143,13 @@
                     this.handleDelete(row);
                 });
             },
-            // 删除轮播图
+            // 删除新闻分类
+            // TODO 删除新闻分类的时候需要判断该分类下是否有新闻
             handleDelete(row) {
-                this.axios.delete(`/banner/del/${row.id}`).then(() => {
-                    this.$message.success("轮播图删除成功");
+                this.axios.delete(`/newsCategory/del/${row.id}`)
+                .then(() => {
+                    this.$message.success("删除成功");
                     this.getList();
-                }).catch(() => {
-                    this.$message.warning("轮播图删除失败");
                 });
             },
             // 点击取消按钮
@@ -205,15 +157,6 @@
                 this.editVisible = false;
                 this.getList();
             },
-            // 转化 图片路径
-            toFilePath(res) {
-                console.log(res);
-                let urlArr = res.data.split("\\");
-                let filename = urlArr.pop();
-                let filePath = "/imgs/"+filename;
-                console.log(filePath);
-                return filePath;
-            }
         }
     }
 </script>

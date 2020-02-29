@@ -78,6 +78,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <loading v-if="showLoading"></loading>
             <!--            分页器-->
             <div class="pagination">
                 <el-pagination backgorund
@@ -189,8 +190,13 @@
 </template>
 
 <script>
+    import Loading from "../components/Loading";
+
     export default {
         name: "product",
+        components: {
+            Loading
+        },
         data() {
             return {
                 query: {
@@ -207,6 +213,7 @@
                 subImgVisible:false, // 控制产品详情图窗口的显示
                 editForm: {}, // 与编辑窗口中的 表单双向绑定
                 addForm: {}, // 与添加窗口中的表单双向绑定
+                showLoading: false
             }
         },
         created() {
@@ -302,6 +309,7 @@
             },
             // 获取列表数据
             getList() {
+                this.showLoading = true;
                 this.axios.get(`/product/list`,{
                     params:{
                         title: this.query.name,
@@ -313,6 +321,7 @@
                         return item.status < 3;
                     });
                     this.pageTotal = res.data.total;
+                    this.showLoading = false;
                 });
             },
             // 点击取消按钮

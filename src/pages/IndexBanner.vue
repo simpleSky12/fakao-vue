@@ -58,6 +58,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <loading v-if="showLoading"></loading>
 
             <!--编辑banner图的弹窗-->
             <el-dialog title="编辑"
@@ -141,8 +142,13 @@
 </template>
 
 <script>
+    import Loading from "../components/Loading";
+
     export default {
         name: "IndexBanner",
+        components: {
+            Loading
+        },
         data() {
             return {
                 tableData: [], // 存放 渲染table表格的数据
@@ -153,6 +159,7 @@
                 editForm: {}, // 与编辑窗口中的 表单双向绑定
                 addForm: {}, // 与添加窗口中的表单双向绑定
                 productList:[], // 存放所有商品列表
+                showLoading: false
             }
         },
         async created() {
@@ -164,10 +171,12 @@
             },*/
             // 获取列表数据
             async getList() {
+                this.showLoading = true;
                 this.productList = await this.getProduct();
                 this.axios.get(`/banner/list/10`)
                     .then(res => {
                         this.tableData = this.getTableData(res.data,this.productList);
+                        this.showLoading = false;
                     });
             },
             // 获取所有产品信息

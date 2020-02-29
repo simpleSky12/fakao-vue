@@ -6,7 +6,7 @@ module.exports = {
         // 代理拦截，自动跳转
         proxy: {
             "/api": {
-                target: "http://a27zij.natappfree.cc",
+                target: "http://n8c5cg.natappfree.cc",
                 changeOrigin: true, // 将主机的点设为原点
                 pathRewrite: {
                     "/api": "" // 添加主机的转发规则

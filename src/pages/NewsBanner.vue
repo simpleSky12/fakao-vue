@@ -35,11 +35,10 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="链接产品" width="130" align="center">
-                    <!--                    TODO 将childrenid与productId 对应起来，并获取课程名称-->
+                    <!--将childrenid与productId 对应起来，并获取课程名称-->
                     <template slot-scope="scope">
-                        <span>{{scope.row.childId}}</span>
+                        <span>{{scope.row.childTitle}}</span>
                     </template>
-
                 </el-table-column>
                 <el-table-column label="归属" width="100" align="center">
                     <el-tag type="success">新闻轮播图</el-tag>
@@ -58,6 +57,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <loading v-if="showLoading"></loading>
 
             <!--编辑banner图的弹窗-->
             <el-dialog title="编辑"
@@ -70,9 +70,12 @@
                     </el-form-item>
                     <!-- TODO 这里需要为 轮播图赋予超链接的指向，下拉表单中存放课程名称-->
                     <el-form-item label="链接产品">
-                        <el-select v-model="editForm.status">
-                            <el-option label="在售" value="1"></el-option>
-                            <el-option label="下架" value="2"></el-option>
+                        <el-select v-model="editForm.childId" placeholder="请选择需要链接的新闻">
+                            <el-option v-for="item in newsList"
+                                       :key="item.id"
+                                       :label="item.title"
+                                       :value="item.id">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="轮播图片" class="upload-box">
@@ -81,8 +84,7 @@
                                 action="/api/upload"
                                 list-type="picture-card"
                                 :on-preview="imgPreview"
-                                :on-success="imgUploadSuccess"
-                                :on-remove="handleRemove">
+                                :on-success="imgUploadSuccess">
                             <i class="el-icon-plus"></i>
                         </el-upload>
                         <el-dialog :visible.sync="imgVisible">
@@ -103,13 +105,6 @@
                 <el-form ref="editForm" :model="addForm" label-width="100px" align="left">
                     <el-form-item label="轮播图名称">
                         <el-input v-model="addForm.title"></el-input>
-                    </el-form-item>
-                    <!-- TODO 这里需要为 轮播图赋予超链接的指向，下拉表单中存放课程名称-->
-                    <el-form-item label="链接产品">
-                        <el-select v-model="editForm.status">
-                            <el-option label="在售" value="1"></el-option>
-                            <el-option label="下架" value="2"></el-option>
-                        </el-select>
                     </el-form-item>
                     <el-form-item label="轮播图片" class="upload-box">
                         <img v-if="addForm.img" :src="addForm.img" class="upladImg">
@@ -135,8 +130,13 @@
 </template>
 
 <script>
+    import Loading from "../components/Loading";
+
     export default {
         name: "NewsBanner",
+        components: {
+            Loading
+        },
         data() {
             return {
                 tableData: [], // 存放 渲染table表格的数据
@@ -147,22 +147,42 @@
                 editForm: {}, // 与编辑窗口中的 表单双向绑定
                 addForm: {}, // 与添加窗口中的表单双向绑定
                 newsList:[], // 存放所有新闻列表
+                showLoading: false
             }
         },
-        created() {
-            this.getList();
+        async created() {
+            await this.getList();
         },
         methods: {
             // 获取列表数据
-            getList() {
+            async getList() {
+                this.showLoading = true;
+                this.newsList = await this.getNewsList();
                 this.axios.get(`/banner/list/20`)
                     .then(res => {
-                        this.tableData = res.data;
+                        this.tableData = this.getTableData(this.newsList, res.data);
+                        this.showLoading = true;
                     });
             },
-            handleRemove(file, fileList) {
-                console.log(file, fileList);
+            // 获取新闻列表数据
+            async getNewsList() {
+                return await this.axios.get(`/news/list`)
+                    .then(res => {
+                        return res.data.list
+                    })
             },
+            // 将新闻标题名称赋值到 newBanner下的链接新闻下
+            getTableData(newsList,newsBannerList) {
+                newsBannerList.forEach(newsBanner => {
+                    newsList.forEach(news => {
+                        if (newsBanner.childId == news.id) {
+                            newsBanner.childTitle = news.title;
+                        }
+                    });
+                });
+                return newsBannerList;
+            },
+
             // 预览轮播图
             imgPreview() {
                 this.imgVisible = true;
@@ -186,6 +206,7 @@
                     this.getList();
                 }).catch(() => {
                     this.$message.warning("轮播图新增失败");
+                    this.getList();
                 });
             },
             // 触发编辑轮播图窗口
@@ -202,6 +223,7 @@
                     this.getList();
                 }).catch(() => {
                     this.$message.warning("轮播图信息修改失败");
+                    this.getList();
                 });
             },
             // 轮播图的删除操作
