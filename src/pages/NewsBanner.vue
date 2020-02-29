@@ -69,7 +69,7 @@
                         <el-input v-model="editForm.title"></el-input>
                     </el-form-item>
                     <!-- TODO 这里需要为 轮播图赋予超链接的指向，下拉表单中存放课程名称-->
-                    <el-form-item label="链接产品">
+                    <el-form-item label="链接新闻">
                         <el-select v-model="editForm.childId" placeholder="请选择需要链接的新闻">
                             <el-option v-for="item in newsList"
                                        :key="item.id"

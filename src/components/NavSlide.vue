@@ -105,6 +105,11 @@
                         icon: "el-icon-s-order",
                         index: "Order",
                         title: "订单列表"
+                    },
+                    {
+                        icon: "el-icon-s-custom",
+                        index: "UserInfo",
+                        title: "登记信息列表"
                     }
 
                 ]

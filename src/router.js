@@ -71,6 +71,12 @@ export default new Router({
                     name:"Order",
                     meta: { title: '订单列表' },
                     component: () => import("./pages/Order")
+                },
+                {
+                    path:"/UserInfo",
+                    name:"UserInfo",
+                    meta: {title:"登记信息列表"},
+                    component: () => import("./pages/UserInfo")
                 }
             ]
         },
