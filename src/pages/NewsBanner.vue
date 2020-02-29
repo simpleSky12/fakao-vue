@@ -161,7 +161,7 @@
                 this.axios.get(`/banner/list/20`)
                     .then(res => {
                         this.tableData = this.getTableData(this.newsList, res.data);
-                        this.showLoading = true;
+                        this.showLoading = false;
                     });
             },
             // 获取新闻列表数据

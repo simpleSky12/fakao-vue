@@ -30,8 +30,13 @@
                       border :data="tableData"
                       header-cell-class-name="table-header">
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="title" label="新闻名称" width="140" align="center"></el-table-column>
-                <el-table-column prop="author" label="新闻作者" width="140" align="center"></el-table-column>
+                <el-table-column prop="title" label="新闻标题" width="140" align="center"></el-table-column>
+                <el-table-column prop="author" label="新闻作者" width="120" align="center"></el-table-column>
+                <el-table-column prop="subTitle" label="副标题" width="120" align="center">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.subTitle?scope.row.subTitle:"暂无"}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="新闻简介图(点击查看大图)" align="center">
                     <template slot-scope="scope">
                         <el-image class="productImg"
@@ -75,7 +80,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <loading v-if="showLoading"></loading>
             <!--分页器-->
             <div class="pagination">
                 <el-pagination backgorund
@@ -92,16 +96,22 @@
                        width="35%"
                        :before-close="handleCancle">
                 <el-form ref="editForm" :model="editForm" label-width="100px" align="left">
-                    <el-form-item label="新闻名称">
+                    <el-form-item label="新闻标题">
                         <el-input v-model="editForm.title"></el-input>
                     </el-form-item>
-                    <el-form-item label="新闻价格">
-                        <el-input v-model="editForm.price"></el-input>
+                    <el-form-item label="新闻作者">
+                        <el-input v-model="editForm.author"></el-input>
                     </el-form-item>
-                    <el-form-item label="新闻状态">
-                        <el-select v-model="editForm.status">
-                            <el-option label="在售" value="1"></el-option>
-                            <el-option label="下架" value="2"></el-option>
+                    <el-form-item label="副标题">
+                        <el-input v-model="addForm.subTitle"></el-input>
+                    </el-form-item>
+                    <el-form-item label="新闻分类">
+                        <el-select v-model="editForm.categoryId" placeholder="请选择所属的新闻分类">
+                            <el-option v-for="category in newsCategory"
+                                       :key = "category.id"
+                                       :label="category.title"
+                                       :value="category.id">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="新闻简介图" class="upload-box">
@@ -144,11 +154,23 @@
                        :visible.sync="addVisible"
                        width="35%">
                 <el-form ref="editForm" :model="addForm" label-width="100px" align="left">
-                    <el-form-item label="新闻名称">
+                    <el-form-item label="新闻标题">
                         <el-input v-model="addForm.title"></el-input>
                     </el-form-item>
-                    <el-form-item label="新闻价格">
-                        <el-input v-model="addForm.price"></el-input>
+                    <el-form-item label="新闻作者">
+                        <el-input v-model="addForm.author"></el-input>
+                    </el-form-item>
+                    <el-form-item label="副标题">
+                        <el-input v-model="addForm.subTitle"></el-input>
+                    </el-form-item>
+                    <el-form-item label="新闻分类">
+                        <el-select v-model="addForm.categoryId" placeholder="请选择所属的新闻分类">
+                            <el-option v-for="category in newsCategory"
+                                       :key = "category.id"
+                                       :label="category.title"
+                                       :value="category.id">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="新闻简介图" class="upload-box">
                         <img v-if="addForm.img" :src="addForm.img" class="upladImg">
@@ -183,6 +205,7 @@
                 </span>
             </el-dialog>
         </div>
+        <loading v-if="showLoading"></loading>
     </div>
 </template>
 
@@ -209,6 +232,7 @@
                 subImgVisible:false, // 控制产品详情图窗口的显示
                 editForm: {}, // 与编辑窗口中的 表单双向绑定
                 addForm: {}, // 与添加窗口中的表单双向绑定
+                newsCategory: [],// 新闻分类列表
                 showLoading: false
             }
         },
@@ -290,7 +314,7 @@
             // 弹窗内确认新增，触发
             handleAdd() {
                 this.addVisible = false;
-                this.axios.post(`/product`, this.addForm).then(() => {
+                this.axios.post(`/news`, this.addForm).then(() => {
                     this.$message.success("新增成功");
                     this.addForm = {};
                     this.getList();
@@ -308,7 +332,7 @@
             // 弹窗内确认修改，触发
             handleEdit() {
                 this.editVisible = false;
-                this.axios.put(`/product/update/${this.editForm.id}`, this.editForm).then(() => {
+                this.axios.put(`/news/update/${this.editForm.id}`, this.editForm).then(() => {
                     this.$message.success("信息修改成功");
                     this.getList();
                 }).catch(() => {
@@ -326,7 +350,7 @@
             },
             // 删除商品
             handleDelete(row) {
-                this.axios.delete(`/product/del/${row.id}`).then(() => {
+                this.axios.delete(`/news/del/${row.id}`).then(() => {
                     this.$message.success("删除成功");
                     this.getList();
                 }).catch(() => {
