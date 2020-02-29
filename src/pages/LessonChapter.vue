@@ -48,14 +48,13 @@
             </el-table>
             <loading v-if="showLoading"></loading>
 
-            <!--编辑newsCategory图的弹窗-->
             <el-dialog title="编辑"
                        :visible.sync="editVisible"
                        width="35%"
                        :before-close="handleCancle">
                 <el-form ref="editForm" :model="editForm" label-width="100px" align="left">
-                    <el-form-item label="新闻分类名称">
-                        <el-input v-model="editForm.title"></el-input>
+                    <el-form-item label="课程大章名称">
+                        <el-input v-model="editForm.name"></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -64,13 +63,15 @@
                 </span>
             </el-dialog>
 
-            <!--新增newsCategory图的弹窗-->
             <el-dialog title="新增"
                        :visible.sync="addVisible"
                        width="35%">
                 <el-form ref="addForm" :model="addForm" label-width="100px" align="left">
-                    <el-form-item label="新闻分类名称">
-                        <el-input v-model="addForm.title"></el-input>
+                    <el-form-item label="课程大章编号">
+                        <el-input v-model="addForm.id"></el-input>
+                    </el-form-item>
+                    <el-form-item label="课程大章名称">
+                        <el-input v-model="addForm.name"></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -145,7 +146,7 @@
             // 弹窗内确认修改，触发
             handleEdit() {
                 this.editVisible = false;
-                this.axios.put(`/newsCategory/update?id=${this.editForm.id}&title=${this.editForm.title}`)
+                this.axios.put(`/lesson/update?id=${this.editForm.id}&name=${this.editForm.name}`)
                     .then(() => {
                         this.$message.success("信息修改成功");
                         this.getList();
@@ -157,7 +158,7 @@
             // 弹窗内确认新增，触发
             handleAdd() {
                 this.addVisible = false;
-                this.axios.post(`/newsCategory/add?title=${this.addForm.title}`).then(() => {
+                this.axios.post(`/lesson/addChapter?id=${this.addForm.id}&name=${this.addForm.name}&parentId=${this.productId}`).then(() => {
                     this.$message.success("新增成功");
                     this.addForm = {};
                     this.getList();
@@ -176,7 +177,7 @@
             // 删除新闻分类
             // TODO 删除新闻分类的时候需要判断该分类下是否有新闻
             handleDelete(row) {
-                this.axios.delete(`/newsCategory/del/${row.id}`)
+                this.axios.delete(`/lesson/del/${row.id}`)
                     .then(() => {
                         this.$message.success("删除成功");
                         this.getList();
