@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb>
                 <el-breadcrumb-item>
-                    <i class="el-icon-video-camera"></i>
+                    <i class="el-icon-video-camera-solid"></i>
                     课程视频管理
                 </el-breadcrumb-item>
                 <el-breadcrumb-item>
