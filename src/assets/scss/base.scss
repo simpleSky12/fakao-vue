@@ -41,6 +41,11 @@ input{
   -webkit-transition: left .3s ease-in-out;
   transition: left .3s ease-in-out;
   background: #f0f0f0;
+  .tag-title{
+    margin-right: 10px;
+    height: 32px;
+    line-height: 32px;
+  }
 }
 
 .content {

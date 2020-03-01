@@ -14,7 +14,7 @@
                 <el-input class="handle-input mr10"
                           v-model="query.name"
                           @keyup.enter.native="handleSearch"
-                          placeholder="搜索"></el-input>
+                          placeholder="搜索课程名称"></el-input>
                 <el-button type="primary"
                            @click="handleSearch"
                            icon="el-icon-search">搜索

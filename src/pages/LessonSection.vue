@@ -14,6 +14,7 @@
         <div class="container">
             <div class="mgb20 handle-box">
                 <!--TODO 通过课程来筛选 章节列表-->
+                <el-tag effect="plain" class="tag-title">课程名称</el-tag>
                 <el-select v-model="productId" placeholder="请选择课程" class="mr10">
                     <el-option v-for="item in productList"
                                :key="item.id"
@@ -62,8 +63,11 @@
                        width="35%"
                        :before-close="handleCancle">
                 <el-form ref="editForm" :model="editForm" label-width="100px" align="left">
-                    <el-form-item label="课程大章名称">
+                    <el-form-item label="课程小节名称">
                         <el-input v-model="editForm.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="视频播放地址">
+                        <el-input v-model="editForm.url"></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -173,7 +177,7 @@
                 this.getList();
             },
 
-            // 触发编辑轮播图窗口
+            // 触发编辑窗口
             toEdit(row) {
                 this.editVisible = true;
                 this.editForm = row;
@@ -181,7 +185,7 @@
             // 弹窗内确认修改，触发
             handleEdit() {
                 this.editVisible = false;
-                this.axios.put(`/lesson/update?id=${this.editForm.id}&name=${this.editForm.name}`)
+                this.axios.put(`/lesson/update?id=${this.editForm.id}&name=${this.editForm.name}&url=${this.editForm.url}`)
                     .then(() => {
                         this.$message.success("信息修改成功");
                         this.getList();
@@ -193,11 +197,12 @@
             // 弹窗内确认新增，触发
             handleAdd() {
                 this.addVisible = false;
-                this.axios.post(`/lesson/addChapter?id=${this.addForm.id}&name=${this.addForm.name}&parentId=${this.productId}`).then(() => {
-                    this.$message.success("新增成功");
-                    this.addForm = {};
-                    this.getList();
-                }).catch(() => {
+                this.axios.post(`/lesson/addSection`, this.addForm)
+                    .then(() => {
+                        this.$message.success("新增成功");
+                        this.addForm = {};
+                        this.getList();
+                    }).catch(() => {
                     this.$message.warning("新增失败");
                 });
             },

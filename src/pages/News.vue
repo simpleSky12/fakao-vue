@@ -16,7 +16,7 @@
                 <el-input class="handle-input mr10"
                           v-model="query.name"
                           @keyup.enter.native="handleSearch"
-                          placeholder="搜索"></el-input>
+                          placeholder="搜索新闻名称"></el-input>
                 <el-button type="primary"
                            @click="handleSearch"
                            icon="el-icon-search">搜索
@@ -90,7 +90,7 @@
                 </el-pagination>
             </div>
 
-            <!--编辑商品信息的弹窗-->
+            <!--编辑弹窗-->
             <el-dialog title="编辑"
                        :visible.sync="editVisible"
                        width="35%"
@@ -149,7 +149,7 @@
                 </span>
             </el-dialog>
 
-            <!--新增商品信息的弹窗-->
+            <!--新增弹窗-->
             <el-dialog title="新增"
                        :visible.sync="addVisible"
                        width="35%">

@@ -13,7 +13,7 @@
         </div>
         <div class="container">
             <div class="mgb20 handle-box">
-                <!--                TODO 通过课程来筛选 章节列表-->
+                <el-tag effect="plain" class="tag-title">课程名称</el-tag>
                 <el-select v-model="productId" placeholder="请选择课程" class="mr10">
                     <el-option v-for="item in productList"
                                :key="item.id"
