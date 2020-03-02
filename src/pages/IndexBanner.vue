@@ -271,14 +271,9 @@
             },
             // 转化 图片路径
             toFilePath(res) {
-                console.log(res);
-                let urlArr = res.data.split("\\");
-                let filename = urlArr.pop();
-                let filePath = "/imgs/"+filename;
-                console.log(filePath);
-                return filePath;
+                let filename = res.data.substring(res.data.lastIndexOf("/")+1);
+                return "http://fk.c8xh.com/imgs/" + filename;
             },
-
         }
     }
 </script>

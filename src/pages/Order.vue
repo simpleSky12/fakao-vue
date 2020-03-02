@@ -96,6 +96,7 @@
                 multipleSelection: [], // ref 指向的双向绑定的对象
                 pageTotal: 0, // 列表信息总条数
                 userList: [],// 所有用户信息
+                productList: [], // 所有商品信息
                 showLoading: false
             }
         },
@@ -107,6 +108,8 @@
             async getList() {
                 this.showLoading = true;
                 this.userList = await this.getUserWx();
+                this.productList = await this.getProductList();
+
                 this.axios.get(`/order/list/all`, {
                     params: {
                         productName: this.query.name,
@@ -115,6 +118,7 @@
                     }
                 }).then(res => {
                     this.tableData = this.getTableData(this.userList,res.data.list);
+                    this.tableData = this.getProductImg(this.productList, this.tableData);
                     this.pageTotal = res.data.total;
                     this.showLoading = false;
                 });
@@ -122,6 +126,13 @@
             // 获取小程序登陆人员信息，与订单表中 userId联动
             async getUserWx() {
                 return await this.axios.get(`/user/listAll`)
+                    .then(res => {
+                        return res.data;
+                    });
+            },
+            // 获取所有课程信息
+            async getProductList() {
+                return await this.axios.get(`/product/all`)
                     .then(res => {
                         return res.data;
                     });
@@ -138,6 +149,17 @@
                     });
                 });
                 return orderList;
+            },
+            // 将产品的图片添加到订单中
+            getProductImg(productList,tableData) {
+                tableData.forEach(table => {
+                    productList.forEach(product => {
+                        if (table.productId == product.id) {
+                            table.productImg = product.img;
+                        }
+                    });
+                });
+                return tableData;
             },
             // 修改日期时间格式
             formatDate(date) {
