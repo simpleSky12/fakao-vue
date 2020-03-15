@@ -345,6 +345,12 @@
             // 弹窗内确认修改，触发
             handleEdit() {
                 this.editVisible = false;
+                if (this.editForm.visit == "不推荐") {
+                    this.editForm.visit = 0;
+                }
+                if (this.editForm.visit == "首页推荐") {
+                    this.editForm.visit = 1;
+                }
                 this.axios.put(`/news/update/${this.editForm.id}`, this.editForm).then(() => {
                     this.$message.success("信息修改成功");
                     this.getList();
