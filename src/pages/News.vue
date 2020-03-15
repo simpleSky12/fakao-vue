@@ -48,7 +48,7 @@
                         </el-image>
                     </template>
                 </el-table-column>
-                <el-table-column label="新闻详情图(点击查看大图)" align="center">
+                <el-table-column label="新闻详情图" align="center">
                     <template slot-scope="scope">
                         <el-image class="detailImg"
                                   fit="contain"
@@ -64,6 +64,13 @@
                 <el-table-column label="所属分类" width="160" align="center">
                     <template slot-scope="scope">
                         <span>{{scope.row.categoryTitle}}</span>
+                    </template>
+                </el-table-column>
+                <!--是否首页推荐-->
+                <el-table-column label="推荐状态" width="100" align="center">
+                    <template slot-scope="scope">
+                        <el-tag v-if="scope.row.visit==0">不推荐</el-tag>
+                        <el-tag type="success" v-if="scope.row.visit==1">首页推荐</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
@@ -112,6 +119,12 @@
                                        :label="category.title"
                                        :value="category.id">
                             </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="推荐状态">
+                        <el-select v-model="editForm.visit" placeholder="选择是否首页推荐">
+                            <el-option label="首页推荐" value="1"></el-option>
+                            <el-option label="不推荐" value="0"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="新闻简介图" class="upload-box">
@@ -327,7 +340,7 @@
             toEdit(row) {
                 this.editVisible = true;
                 this.editForm = row;
-                this.editForm.status = row.status == 1 ? "在售" : "下架";
+                this.editForm.visit = row.visit == 0 ? "不推荐" : "首页推荐";
             },
             // 弹窗内确认修改，触发
             handleEdit() {
