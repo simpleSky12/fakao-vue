@@ -6,11 +6,11 @@ module.exports = {
         // 代理拦截，自动跳转
         proxy: {
             "/api": {
-                target: "https://fk.c8xh.com/",
+                target: "http://127.0.0.1:8000/",
                 changeOrigin: true, // 将主机的点设为原点
-                /*pathRewrite: {
+                pathRewrite: {
                     "/api": "" // 添加主机的转发规则
-                }*/
+                }
             }
         }
     },

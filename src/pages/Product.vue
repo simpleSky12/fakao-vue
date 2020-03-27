@@ -103,8 +103,10 @@
                     </el-form-item>
                     <el-form-item label="课程状态">
                         <el-select v-model="editForm.status">
-                            <el-option label="在售" value="1"></el-option>
-                            <el-option label="下架" value="2"></el-option>
+                            <el-option v-for="item in option"
+                                       :key="item.value"
+                                       :label="item.label"
+                                       :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="课程简介图" class="upload-box">
@@ -213,7 +215,14 @@
                 subImgVisible:false, // 控制产品详情图窗口的显示
                 editForm: {}, // 与编辑窗口中的 表单双向绑定
                 addForm: {}, // 与添加窗口中的表单双向绑定
-                showLoading: false
+                showLoading: false,
+                option:[{
+                    value:1,
+                    label:"在售",
+                },{
+                    value:2,
+                    label:"下架",
+                }]
             }
         },
         created() {
@@ -272,7 +281,6 @@
             toEdit(row) {
                 this.editVisible = true;
                 this.editForm = row;
-                this.editForm.status = row.status == 1 ? "在售" : "下架";
             },
             // 弹窗内确认修改，触发
             handleEdit() {
